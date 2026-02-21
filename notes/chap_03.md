@@ -22,9 +22,9 @@
 
 A **rotation matrix** R is a 3×3 matrix whose columns are the unit axes of a body frame {b} expressed in a fixed frame {s}:
 
-```
-R = [x̂_b  ŷ_b  ẑ_b]
-```
+$$
+R = \begin{bmatrix} \hat{x}_b & \hat{y}_b & \hat{z}_b \end{bmatrix}
+$$
 
 **SO(3)** (Special Orthogonal Group) is the set of all 3×3 real matrices R satisfying:
 - **Orthogonality**: R^T R = I  (columns are orthonormal)
@@ -38,24 +38,20 @@ These two conditions impose 6 constraints on the 9 entries, leaving **3 degrees 
 
 **Easy**: Given the matrix Q below, determine if it is a valid rotation matrix.
 
-```
-Q = | 0  -1   0 |
-    | 0   0   1 |
-    | 1   0   0 |
-```
+$$
+Q = \begin{bmatrix} 0 & -1 & 0 \\ 0 & 0 & 1 \\ 1 & 0 & 0 \end{bmatrix}
+$$
 
 **Solution**:
 Check 1 — Orthogonality: Q^T Q:
 
-```
-Q^T = | 0   0   1 |
-      |-1   0   0 |
-      | 0   1   0 |
+$$
+Q^T = \begin{bmatrix} 0 & 0 & 1 \\ -1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}
+$$
 
-Q^T Q = | 0·0+0·0+1·1    0·(-1)+0·0+1·0    0·0+0·1+1·0 |   | 1  0  0 |
-        |(-1)·0+0·0+0·1  (-1)(-1)+0·0+0·0  (-1)·0+0·1+0·0| = | 0  1  0 | = I  ✓
-        | 0·0+1·0+0·1     0·(-1)+1·0+0·0    0·0+1·1+0·0  |   | 0  0  1 |
-```
+$$
+Q^T Q = \begin{bmatrix} 0\cdot0+0\cdot0+1\cdot1 & 0\cdot(-1)+0\cdot0+1\cdot0 & 0\cdot0+0\cdot1+1\cdot0 \\ (-1)\cdot0+0\cdot0+0\cdot1 & (-1)(-1)+0\cdot0+0\cdot0 & (-1)\cdot0+0\cdot1+0\cdot0 \\ 0\cdot0+1\cdot0+0\cdot1 & 0\cdot(-1)+1\cdot0+0\cdot0 & 0\cdot0+1\cdot1+0\cdot0 \end{bmatrix} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} = I \quad \checkmark
+$$
 
 Check 2 — Determinant:
 det(Q) = 0·(0·0 − 1·0) − (−1)·(0·0 − 1·1) + 0·(0·0 − 0·1)
@@ -67,20 +63,18 @@ Since det(Q) = −1 ≠ 1, **Q is NOT a rotation matrix**. It preserves vector l
 
 **Medium**: Consider a rotation matrix R with the structure:
 
-```
-R = | a    a  |
-    |-a    b  |
-```
+$$
+R = \begin{bmatrix} a & a \\ -a & b \end{bmatrix}
+$$
 
 where a, b are real numbers. Find the numerical values of a and b.
 
 **Solution**:
 For R ∈ SO(2), we need R^T R = I:
 
-```
-R^T R = | a  -a || a   a | = | 2a²      a²-ab |
-        | a   b || -a  b |   | a²-ab    a²+b² |
-```
+$$
+R^T R = \begin{bmatrix} a & -a \\ a & b \end{bmatrix} \begin{bmatrix} a & a \\ -a & b \end{bmatrix} = \begin{bmatrix} 2a^2 & a^2-ab \\ a^2-ab & a^2+b^2 \end{bmatrix}
+$$
 
 Setting equal to I:
 - (1,1): 2a² = 1  →  a = √2/2
@@ -95,11 +89,9 @@ Check: det(R) = ab − (−a)(a) = ab + a² = (√2/2)(√2/2) + 1/2 = 1/2 + 1/2
 
 **Hard**: Consider the matrix:
 
-```
-R = | 0  -1   0 |
-    | 0   0  -1 |
-    | 1   0   0 |
-```
+$$
+R = \begin{bmatrix} 0 & -1 & 0 \\ 0 & 0 & -1 \\ 1 & 0 & 0 \end{bmatrix}
+$$
 
 (a) Verify R ∈ SO(3) by showing R^T R = I and det(R) = 1.
 (b) Show that ‖Rx‖ = ‖x‖ for arbitrary x = [x₁, x₂, x₃]^T.
@@ -108,28 +100,26 @@ R = | 0  -1   0 |
 
 (a) Orthogonality check:
 
-```
-R^T = | 0   0   1 |
-      |-1   0   0 |
-      | 0  -1   0 |
+$$
+R^T = \begin{bmatrix} 0 & 0 & 1 \\ -1 & 0 & 0 \\ 0 & -1 & 0 \end{bmatrix}
+$$
 
-R^T R = | 0·0+0·0+1·1     0·(-1)+0·0+1·0    0·0+0·(-1)+1·0 |   | 1  0  0 |
-        |(-1)·0+0·0+0·1  (-1)(-1)+0·0+0·0   (-1)·0+0·(-1)+0·0| = | 0  1  0 | = I  ✓
-        | 0·0+(-1)·0+0·1   0·(-1)+(-1)·0+0·0  0·0+(-1)(-1)+0·0|  | 0  0  1 |
-```
+$$
+R^T R = \begin{bmatrix} 0\cdot0+0\cdot0+1\cdot1 & 0\cdot(-1)+0\cdot0+1\cdot0 & 0\cdot0+0\cdot(-1)+1\cdot0 \\ (-1)\cdot0+0\cdot0+0\cdot1 & (-1)(-1)+0\cdot0+0\cdot0 & (-1)\cdot0+0\cdot(-1)+0\cdot0 \\ 0\cdot0+(-1)\cdot0+0\cdot1 & 0\cdot(-1)+(-1)\cdot0+0\cdot0 & 0\cdot0+(-1)(-1)+0\cdot0 \end{bmatrix} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} = I \quad \checkmark
+$$
 
 Determinant (expanding along first column):
 det(R) = 0·(0·0−(−1)·0) − 0·((−1)·0−0·0) + 1·((−1)(−1)−0·0) = 0 − 0 + 1 = 1  ✓
 
 (b) Length preservation:
 
-```
-Rx = | 0  -1   0 || x₁ |   | -x₂ |
-     | 0   0  -1 || x₂ | = | -x₃ |
-     | 1   0   0 || x₃ |   |  x₁ |
+$$
+Rx = \begin{bmatrix} 0 & -1 & 0 \\ 0 & 0 & -1 \\ 1 & 0 & 0 \end{bmatrix} \begin{bmatrix} x_1 \\ x_2 \\ x_3 \end{bmatrix} = \begin{bmatrix} -x_2 \\ -x_3 \\ x_1 \end{bmatrix}
+$$
 
-‖Rx‖² = (-x₂)² + (-x₃)² + (x₁)² = x₁² + x₂² + x₃² = ‖x‖²
-```
+$$
+\|Rx\|^2 = (-x_2)^2 + (-x_3)^2 + (x_1)^2 = x_1^2 + x_2^2 + x_3^2 = \|x\|^2
+$$
 
 Therefore ‖Rx‖ = ‖x‖.  ✓
 
@@ -158,19 +148,17 @@ Therefore ‖Rx‖ = ‖x‖.  ✓
 
 ### Elementary Rotation Matrices
 
-```
-Rot(x̂, θ) = | 1    0       0    |
-             | 0   cosθ   -sinθ  |
-             | 0   sinθ    cosθ  |
+$$
+\text{Rot}(\hat{x}, \theta) = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{bmatrix}
+$$
 
-Rot(ŷ, θ) = | cosθ    0    sinθ |
-             |  0      1     0   |
-             |-sinθ    0    cosθ |
+$$
+\text{Rot}(\hat{y}, \theta) = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix}
+$$
 
-Rot(ẑ, θ) = | cosθ  -sinθ   0 |
-             | sinθ   cosθ   0 |
-             |  0      0     1 |
-```
+$$
+\text{Rot}(\hat{z}, \theta) = \begin{bmatrix} \cos\theta & -\sin\theta & 0 \\ \sin\theta & \cos\theta & 0 \\ 0 & 0 & 1 \end{bmatrix}
+$$
 
 ### Practice Problems
 
@@ -178,11 +166,9 @@ Rot(ẑ, θ) = | cosθ  -sinθ   0 |
 
 **Solution**:
 
-```
-R_sb = Rot(ẑ, 90°) = | cos90°  -sin90°  0 |   | 0  -1  0 |
-                      | sin90°   cos90°  0 | = | 1   0  0 |
-                      |   0        0     1 |   | 0   0  1 |
-```
+$$
+R_{sb} = \text{Rot}(\hat{z}, 90^\circ) = \begin{bmatrix} \cos 90^\circ & -\sin 90^\circ & 0 \\ \sin 90^\circ & \cos 90^\circ & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+$$
 
 ---
 
@@ -191,27 +177,19 @@ R_sb = Rot(ẑ, 90°) = | cos90°  -sin90°  0 |   | 0  -1  0 |
 **Solution**:
 Since both rotations are about **body** axes, we **post-multiply**:
 
-```
-R_sc = R_sa · R_ab · R_bc = I · Rot(x̂, α) · Rot(ẑ, β)
-```
+$$
+R_{sc} = R_{sa} \cdot R_{ab} \cdot R_{bc} = I \cdot \text{Rot}(\hat{x}, \alpha) \cdot \text{Rot}(\hat{z}, \beta)
+$$
 
-```
-R_sc = | 1    0       0   || cosβ  -sinβ  0 |
-       | 0   cosα   -sinα || sinβ   cosβ  0 |
-       | 0   sinα    cosα ||  0      0    1 |
-
-     = |      cosβ          -sinβ          0     |
-       | cosα·sinβ      cosα·cosβ       -sinα    |
-       | sinα·sinβ      sinα·cosβ        cosα    |
-```
+$$
+R_{sc} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos\alpha & -\sin\alpha \\ 0 & \sin\alpha & \cos\alpha \end{bmatrix} \begin{bmatrix} \cos\beta & -\sin\beta & 0 \\ \sin\beta & \cos\beta & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} \cos\beta & -\sin\beta & 0 \\ \cos\alpha\cdot\sin\beta & \cos\alpha\cdot\cos\beta & -\sin\alpha \\ \sin\alpha\cdot\sin\beta & \sin\alpha\cdot\cos\beta & \cos\alpha \end{bmatrix}
+$$
 
 For α = β = π/2:
 
-```
-R_sc = | 0   -1   0 |
-       | 0    0  -1 |
-       | 1    0   0 |
-```
+$$
+R_{sc} = \begin{bmatrix} 0 & -1 & 0 \\ 0 & 0 & -1 \\ 1 & 0 & 0 \end{bmatrix}
+$$
 
 ---
 
@@ -244,22 +222,20 @@ This is exactly the principle behind roll–pitch–yaw: body-frame R-P-Y equals
 If R(t) is a time-varying rotation matrix, the angular velocity ω can be expressed in two frames:
 
 **Space-frame angular velocity**:
-```
-[ω_s] = Ṙ R^{-1} = Ṙ R^T  ∈ so(3)
-```
+$$
+[\omega_s] = \dot{R} R^{-1} = \dot{R} R^T \in so(3)
+$$
 
 **Body-frame angular velocity**:
-```
-[ω_b] = R^{-1} Ṙ = R^T Ṙ  ∈ so(3)
-```
+$$
+[\omega_b] = R^{-1} \dot{R} = R^T \dot{R} \in so(3)
+$$
 
 where [ω] is the **skew-symmetric matrix** representation of ω = [ω₁, ω₂, ω₃]^T:
 
-```
-[ω] = |  0    -ω₃    ω₂ |
-      |  ω₃    0    -ω₁ |
-      | -ω₂   ω₁     0  |
-```
+$$
+[\omega] = \begin{bmatrix} 0 & -\omega_3 & \omega_2 \\ \omega_3 & 0 & -\omega_1 \\ -\omega_2 & \omega_1 & 0 \end{bmatrix}
+$$
 
 **Relationship**: ω_s = R · ω_b  and  ω_b = R^T · ω_s
 
@@ -270,11 +246,9 @@ where [ω] is the **skew-symmetric matrix** representation of ω = [ω₁, ω₂
 **Easy**: Given ω = [1, 2, 3]^T, write the skew-symmetric matrix [ω].
 
 **Solution**:
-```
-[ω] = |  0   -3    2 |
-      |  3    0   -1 |
-      | -2    1    0 |
-```
+$$
+[\omega] = \begin{bmatrix} 0 & -3 & 2 \\ 3 & 0 & -1 \\ -2 & 1 & 0 \end{bmatrix}
+$$
 
 Verify: [ω] = −[ω]^T  ✓
 
@@ -282,20 +256,16 @@ Verify: [ω] = −[ω]^T  ✓
 
 **Medium**: Given R_sb below and the space-frame angular velocity ω_s = [3, 2, 1]^T, find ω_b.
 
-```
-R_sb = | 0  -1  0 |
-       | 1   0  0 |
-       | 0   0  1 |
-```
+$$
+R_{sb} = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+$$
 
 **Solution**:
 ω_b = R^T ω_s:
 
-```
-ω_b = | 0   1   0 || 3 |   | 2 |
-      |-1   0   0 || 2 | = |-3 |
-      | 0   0   1 || 1 |   | 1 |
-```
+$$
+\omega_b = \begin{bmatrix} 0 & 1 & 0 \\ -1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} 3 \\ 2 \\ 1 \end{bmatrix} = \begin{bmatrix} 2 \\ -3 \\ 1 \end{bmatrix}
+$$
 
 ---
 
@@ -303,35 +273,29 @@ R_sb = | 0  -1  0 |
 
 **Solution**:
 
-```
-R = | 0  -1  0 |       [ω] = | 0   0   0 |
-    | 1   0  0 |             | 0   0  -1 |
-    | 0   0  1 |             | 0   1   0 |
-```
+$$
+R = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} \qquad [\omega] = \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -1 \\ 0 & 1 & 0 \end{bmatrix}
+$$
 
 Left side: R[ω]R^T:
 
-```
-R[ω] = | 0  -1  0 || 0   0   0 |   | 0   0   1 |
-       | 1   0  0 || 0   0  -1 | = | 0   0   0 |
-       | 0   0  1 || 0   1   0 |   | 0   1   0 |
+$$
+R[\omega] = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} 0 & 0 & 0 \\ 0 & 0 & -1 \\ 0 & 1 & 0 \end{bmatrix} = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}
+$$
 
-R[ω]R^T = | 0   0   1 || 0   1  0 |   | 0   0   1 |
-          | 0   0   0 ||-1   0  0 | = | 0   0   0 |
-          | 0   1   0 || 0   0  1 |   |-1   0   0 |
-```
+$$
+R[\omega]R^T = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix} \begin{bmatrix} 0 & 1 & 0 \\ -1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ -1 & 0 & 0 \end{bmatrix}
+$$
 
 Right side: [Rω]:
 
-```
-Rω = | 0  -1  0 || 1 |   | 0 |
-     | 1   0  0 || 0 | = | 1 |
-     | 0   0  1 || 0 |   | 0 |
+$$
+R\omega = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} 1 \\ 0 \\ 0 \end{bmatrix} = \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix}
+$$
 
-[Rω] = | 0   0   1 |
-       | 0   0   0 |
-       |-1   0   0 |
-```
+$$
+[R\omega] = \begin{bmatrix} 0 & 0 & 1 \\ 0 & 0 & 0 \\ -1 & 0 & 0 \end{bmatrix}
+$$
 
 Both sides equal.  ✓
 
@@ -344,9 +308,9 @@ Both sides equal.  ✓
 Any rotation can be described by a unit axis ω̂ ∈ ℝ³ (‖ω̂‖ = 1) and an angle θ. The exponential coordinates are ω̂θ ∈ ℝ³.
 
 **Rodrigues' formula**:
-```
-R = e^{[ω̂]θ} = I + sinθ [ω̂] + (1 − cosθ) [ω̂]²
-```
+$$
+R = e^{[\hat{\omega}]\theta} = I + \sin\theta [\hat{\omega}] + (1 - \cos\theta)[\hat{\omega}]^2
+$$
 
 This maps from so(3) → SO(3).
 
@@ -360,24 +324,18 @@ This maps from so(3) → SO(3).
 
 **Solution**:
 
-```
-[ω̂] = | 0  -1  0 |       [ω̂]² = | 0  -1  0 || 0  -1  0 |   |-1   0  0 |
-       | 1   0  0 |               | 1   0  0 || 1   0  0 | = | 0  -1  0 |
-       | 0   0  0 |               | 0   0  0 || 0   0  0 |   | 0   0  0 |
-```
+$$
+[\hat{\omega}] = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \qquad [\hat{\omega}]^2 = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -1 & 0 \\ 0 & 0 & 0 \end{bmatrix}
+$$
 
 Apply Rodrigues':
-```
-R = I + sin(π/2)[ω̂] + (1 − cos(π/2))[ω̂]²
-
-  = | 1  0  0 |     | 0  -1  0 |     |-1   0  0 |
-    | 0  1  0 | + 1·| 1   0  0 | + 1·| 0  -1  0 |
-    | 0  0  1 |     | 0   0  0 |     | 0   0  0 |
-
-  = | 0  -1  0 |
-    | 1   0  0 | = Rot(ẑ, π/2)  ✓
-    | 0   0  1 |
-```
+$$
+\begin{aligned}
+R &= I + \sin(\pi/2)[\hat{\omega}] + (1 - \cos(\pi/2))[\hat{\omega}]^2 \\
+  &= \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} + 1 \cdot \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} + 1 \cdot \begin{bmatrix} -1 & 0 & 0 \\ 0 & -1 & 0 \\ 0 & 0 & 0 \end{bmatrix} \\
+  &= \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix} = \text{Rot}(\hat{z}, \pi/2) \quad \checkmark
+\end{aligned}
+$$
 
 ---
 
@@ -387,36 +345,23 @@ R = I + sin(π/2)[ω̂] + (1 − cos(π/2))[ω̂]²
 
 sinθ = sin(120°) = √3/2,  cosθ = cos(120°) = −1/2
 
-```
-[ω̂] = (1/√3)| 0  -1   1 |
-             | 1   0  -1 |
-             |-1   1   0 |
-```
+$$
+[\hat{\omega}] = \frac{1}{\sqrt{3}} \begin{bmatrix} 0 & -1 & 1 \\ 1 & 0 & -1 \\ -1 & 1 & 0 \end{bmatrix}
+$$
 
-```
-[ω̂]² = (1/3)| 0  -1   1 || 0  -1   1 |   (1/3)|-2   1   1 |
-             | 1   0  -1 || 1   0  -1 | =       | 1  -2   1 |
-             |-1   1   0 ||-1   1   0 |         | 1   1  -2 |
-```
+$$
+[\hat{\omega}]^2 = \frac{1}{3} \begin{bmatrix} 0 & -1 & 1 \\ 1 & 0 & -1 \\ -1 & 1 & 0 \end{bmatrix} \begin{bmatrix} 0 & -1 & 1 \\ 1 & 0 & -1 \\ -1 & 1 & 0 \end{bmatrix} = \frac{1}{3} \begin{bmatrix} -2 & 1 & 1 \\ 1 & -2 & 1 \\ 1 & 1 & -2 \end{bmatrix}
+$$
 
 Apply Rodrigues':
-```
-R = I + (√3/2)(1/√3)| 0  -1   1 | + (3/2)(1/3)|-2   1   1 |
-                     | 1   0  -1 |              | 1  -2   1 |
-                     |-1   1   0 |              | 1   1  -2 |
-
-  = I + (1/2)| 0  -1   1 | + (1/2)|-2   1   1 |
-             | 1   0  -1 |        | 1  -2   1 |
-             |-1   1   0 |        | 1   1  -2 |
-
-  = | 1  0  0 |   | 0   -1/2   1/2 |   |-1    1/2   1/2 |
-    | 0  1  0 | + | 1/2   0   -1/2 | + | 1/2  -1    1/2 |
-    | 0  0  1 |   |-1/2  1/2    0  |   | 1/2   1/2  -1  |
-
-  = | 0   0   1 |
-    | 1   0   0 |
-    | 0   1   0 |
-```
+$$
+\begin{aligned}
+R &= I + \left(\frac{\sqrt{3}}{2}\right)\left(\frac{1}{\sqrt{3}}\right) \begin{bmatrix} 0 & -1 & 1 \\ 1 & 0 & -1 \\ -1 & 1 & 0 \end{bmatrix} + \left(\frac{3}{2}\right)\left(\frac{1}{3}\right) \begin{bmatrix} -2 & 1 & 1 \\ 1 & -2 & 1 \\ 1 & 1 & -2 \end{bmatrix} \\
+  &= I + \frac{1}{2} \begin{bmatrix} 0 & -1 & 1 \\ 1 & 0 & -1 \\ -1 & 1 & 0 \end{bmatrix} + \frac{1}{2} \begin{bmatrix} -2 & 1 & 1 \\ 1 & -2 & 1 \\ 1 & 1 & -2 \end{bmatrix} \\
+  &= \begin{bmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix} + \begin{bmatrix} 0 & -1/2 & 1/2 \\ 1/2 & 0 & -1/2 \\ -1/2 & 1/2 & 0 \end{bmatrix} + \begin{bmatrix} -1 & 1/2 & 1/2 \\ 1/2 & -1 & 1/2 \\ 1/2 & 1/2 & -1 \end{bmatrix} \\
+  &= \begin{bmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{bmatrix}
+\end{aligned}
+$$
 
 **Verification**: This is a 120° rotation about the [1,1,1] axis, which cyclically permutes the coordinate axes (x→y→z→x).  ✓
 
@@ -428,9 +373,9 @@ R = I + (√3/2)(1/√3)| 0  -1   1 | + (3/2)(1/3)|-2   1   1 |
 
 Using R(−θ) = I − sinθ[ω̂] + (1−cosθ)[ω̂]² (since sin is odd, cos is even):
 
-```
-R · R^{-1} = (I + sinθ[ω̂] + (1−cosθ)[ω̂]²)(I − sinθ[ω̂] + (1−cosθ)[ω̂]²)
-```
+$$
+R \cdot R^{-1} = (I + \sin\theta[\hat{\omega}] + (1-\cos\theta)[\hat{\omega}]^2)(I - \sin\theta[\hat{\omega}] + (1-\cos\theta)[\hat{\omega}]^2)
+$$
 
 Expand term by term, using [ω̂]³ = −[ω̂] and [ω̂]⁴ = −[ω̂]² :
 
@@ -535,13 +480,6 @@ R − R^T = | 0  -1  0 |   | 0   0   1 |   | 0  -1  -1 |
 ```
 
 Reading off the skew-symmetric entries:
-```
-ω̂₃ = 1/√3,  ω̂₂ = −(−1/√3) = ... 
-```
-
-Actually, from [ω̂]: ω̂₁ = (1/√3)(1) = 1/√3, ω̂₂ = (1/√3)(−1) = −1/√3, ω̂₃ = (1/√3)(1) = 1/√3
-
-Wait, let me re-read the skew-symmetric matrix carefully:
 
 ```
 [ω̂] = |  0    -ω̂₃    ω̂₂ |
@@ -549,11 +487,16 @@ Wait, let me re-read the skew-symmetric matrix carefully:
        | -ω̂₂   ω̂₁     0  |
 ```
 
-From our result:
+```
+ω̂₃ = 1/√3,  ω̂₂ = −(−1/√3) = ... 
+```
+
+From [ω̂]: ω̂₁ = (1/√3)(1) = 1/√3, ω̂₂ = (1/√3)(−1) = −1/√3, ω̂₃ = (1/√3)(1) = 1/√3
+
 ```
 [ω̂] = (1/√3) |  0   -1   -1 |
-               |  1    0   -1 |
-               |  1    1    0 |
+             |  1    0   -1 |
+             |  1    1    0 |
 ```
 
 So: −ω̂₃ = −1/√3 → ω̂₃ = 1/√3

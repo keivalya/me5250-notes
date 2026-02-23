@@ -34,23 +34,19 @@ Two main PoE representations:
 Given a robot at its **home (zero) position**, identify each joint's screw axis S_i = [ω_i; v_i] in the space frame.
 
 **Revolute joint** (zero pitch, h = 0):
-$$
-\begin{aligned}
-\omega_i &= \text{unit vector along joint axis (RHR for positive rotation)} \\
-v_i &= -\omega_i \times q_i \quad \text{(equivalently, } v_i = q_i \times \omega_i\text{)}
-\end{aligned}
-$$
+```
+ω_i = unit vector along joint axis (RHR for positive rotation)
+v_i = -ω_i × q_i       (equivalently, v_i = q_i × ω_i)
+```
 where q_i is ANY point on the joint axis in {s} coordinates.
 
 **Physical interpretation of v_i**: Imagine joint i spinning at 1 rad/s with all other joints frozen at zero. v_i is the velocity of the point on the rigid body currently at the {s} origin.
 
 **Prismatic joint** (infinite pitch):
-$$
-\begin{aligned}
-\omega_i &= \begin{bmatrix} 0 \\ 0 \\ 0 \end{bmatrix} \\
-v_i &= \text{unit vector in direction of positive translation}
-\end{aligned}
-$$
+```
+ω_i = [0, 0, 0]^T
+v_i = unit vector in direction of positive translation
+```
 
 **Quick sanity checks**:
 - Revolute: ‖ω_i‖ = 1, and v_i · ω_i = 0 (always, for zero-pitch screws)
@@ -70,9 +66,12 @@ Joint 1 at origin: v₁ = -ω₁ × [0,0,0] = [0, 0, 0]
 
 Joint 2 at q₂ = [L₁, 0, 0]: v₂ = -[0,0,1] × [L₁, 0, 0] = -[0, L₁, 0] = [0, -L₁, 0]
 
-$$
-M = \begin{bmatrix} 1 & 0 & 0 & L_1+L_2 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
-$$
+```
+M = | 1  0  0  L₁+L₂ |
+    | 0  1  0    0    |
+    | 0  0  1    0    |
+    | 0  0  0    1    |
+```
 
 | i | ω_i | v_i |
 |---|-----|-----|
@@ -83,9 +82,12 @@ $$
 
 **Medium**: For the 3R spatial open chain (textbook Figure 4.3), joint 1 rotates about ẑ₀ through origin, joint 2 rotates about ŷ₀ through [L₁, 0, 0], and joint 3 rotates about x̂₀ through [0, 0, L₂] (with the arm in home position). The end-effector at home is:
 
-$$
-M = \begin{bmatrix} 0 & 0 & -1 & L_1 \\ 0 & 1 & 0 & 0 \\ 1 & 0 & 0 & L_2 \\ 0 & 0 & 0 & 1 \end{bmatrix}
-$$
+```
+M = | 0  0  -1   L₁ |
+    | 0  1   0    0 |
+    | 1  0   0   L₂ |
+    | 0  0   0    1 |
+```
 
 Find S₁, S₂, S₃.
 
@@ -119,9 +121,12 @@ Matches textbook Example 4.1. ✓
 
 The end-effector at home position is at [2L, -L, 0] with orientation same as {s}, but with body-frame offset d below.
 
-$$
-M = \begin{bmatrix} 1 & 0 & 0 & 2L \\ 0 & 1 & 0 & -L \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
-$$
+```
+M = | 1  0  0   2L |
+    | 0  1  0   -L |
+    | 0  0  1    0 |
+    | 0  0  0    1 |
+```
 
 Find all screw axes.
 
@@ -155,9 +160,9 @@ Joint 3 (prismatic along -ŷ):
 
 The **space form** of the PoE formula:
 
-$$
-T(\theta) = e^{[S_1]\theta_1} \cdot e^{[S_2]\theta_2} \cdots e^{[S_n]\theta_n} \cdot M
-$$
+```
+T(θ) = e^{[S₁]θ₁} · e^{[S₂]θ₂} · ··· · e^{[Sₙ]θₙ} · M
+```
 
 **Key idea**: Each joint applies a screw motion to ALL outward links. Joint n moves only the end-effector. Joint n-1 moves links n-1 and n together. Joint 1 moves the entire robot.
 
@@ -171,32 +176,34 @@ $$
 
 **Solution**:
 
-$$
-\begin{aligned}
-e^{[S_1]\pi/2} &= \text{Rot}(\hat{z}, \pi/2) \text{ with no translation} \\
-&= \begin{bmatrix} 0 & -1 & 0 & 0 \\ 1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
-\end{aligned}
-$$
+```
+e^{[S₁]π/2} = Rot(ẑ, π/2) with no translation (axis through origin)
 
-$$
-T = e^{[S_1]\pi/2} \cdot M = \begin{bmatrix} 0 & -1 & 0 & 0 \\ 1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} 1 & 0 & 0 & L \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 0 & -1 & 0 & 0 \\ 1 & 0 & 0 & L \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
-$$
+= | 0  -1  0  0 |
+  | 1   0  0  0 |
+  | 0   0  1  0 |
+  | 0   0  0  1 |
+
+T = e^{[S₁]π/2} · M = | 0  -1  0  0 || 1  0  0  L |   | 0  -1  0  0 |
+                        | 1   0  0  0 || 0  1  0  0 | = | 1   0  0  L |
+                        | 0   0  1  0 || 0  0  1  0 |   | 0   0  1  0 |
+                        | 0   0  0  1 || 0  0  0  1 |   | 0   0  0  1 |
+```
 
 The end-effector moved from [L, 0, 0] to [0, L, 0] and rotated 90° — the link swept a quarter circle. ✓
 
 ---
 
 **Medium**: For a 2R planar robot with:
-$$
-\begin{aligned}
-S_1 &= \begin{bmatrix} 0 & 0 & 1 & 0 & 0 & 0 \end{bmatrix}^T \\
-S_2 &= \begin{bmatrix} 0 & 0 & 1 & 0 & -1 & 0 \end{bmatrix}^T \quad \text{(joint at [1, 0, 0], } L_1 = 1\text{)}
-\end{aligned}
-$$
+```
+S₁ = [0, 0, 1, 0, 0, 0]^T
+S₂ = [0, 0, 1, 0, -1, 0]^T    (joint at [1, 0, 0], L₁ = 1)
 
-$$
-M = \begin{bmatrix} 1 & 0 & 0 & 2 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} \quad \text{(} L_1 = L_2 = 1\text{)}
-$$
+M = | 1  0  0  2 |
+    | 0  1  0  0 |     (L₁ = L₂ = 1)
+    | 0  0  1  0 |
+    | 0  0  0  1 |
+```
 
 Find T for θ = [π/2, -π/2].
 
@@ -206,54 +213,64 @@ Step 1: e^{[S₂](-π/2)} — revolute about ẑ through [1, 0, 0] by -π/2.
 
 Using e^{[S]θ} for a revolute joint (‖ω‖ = 1):
 
-$$
-\text{Rotation part: } e^{[\omega]\theta} = \text{Rot}(\hat{z}, -\pi/2) = \begin{bmatrix} 0 & 1 & 0 \\ -1 & 0 & 0 \\ 0 & 0 & 1 \end{bmatrix}
-$$
+```
+Rotation part: e^{[ω]θ} = Rot(ẑ, -π/2) = | 0   1  0 |
+                                             |-1   0  0 |
+                                             | 0   0  1 |
 
-$$
-\text{Translation part: } G(\theta)v, \text{ where } v = \begin{bmatrix} 0 \\ -1 \\ 0 \end{bmatrix}, \theta = -\pi/2
-$$
+Translation part: G(θ)v, where v = [0, -1, 0], θ = -π/2
 
-$$
-G(\theta) = I\theta + (1-\cos\theta)[\omega] + (\theta - \sin\theta)[\omega]^2
-$$
+G(θ) = Iθ + (1-cosθ)[ω] + (θ - sinθ)[ω]²
 
-$$
-\theta = -\pi/2, \quad \sin\theta = -1, \quad \cos\theta = 0
-$$
+θ = -π/2, sinθ = -1, cosθ = 0
 
-$$
-[\omega] = \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} \qquad [\omega]^2 = \begin{bmatrix} -1 & 0 & 0 \\ 0 & -1 & 0 \\ 0 & 0 & 0 \end{bmatrix}
-$$
+[ω] = | 0  -1  0 |     [ω]² = |-1  0  0 |
+      | 1   0  0 |            | 0 -1  0 |
+      | 0   0  0 |            | 0  0  0 |
 
-$$
-\begin{aligned}
-G(-\pi/2) &= (-\pi/2)I + (1) \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} + (1-\pi/2) \begin{bmatrix} -1 & 0 & 0 \\ 0 & -1 & 0 \\ 0 & 0 & 0 \end{bmatrix} \\
-&= \begin{bmatrix} -\pi/2+\pi/2-1 & -1 & 0 \\ 1 & -\pi/2+\pi/2-1 & 0 \\ 0 & 0 & -\pi/2 \end{bmatrix} = \begin{bmatrix} -1 & -1 & 0 \\ 1 & -1 & 0 \\ 0 & 0 & -\pi/2 \end{bmatrix}
-\end{aligned}
-$$
+G(-π/2) = (-π/2)I + (1)| 0  -1  0| + (-π/2+1)|-1  0  0|
+                         | 1   0  0|            | 0 -1  0|
+                         | 0   0  0|            | 0  0  0|
 
-$$
-G(-\pi/2)v = \begin{bmatrix} -1 & -1 & 0 \\ 1 & -1 & 0 \\ 0 & 0 & -\pi/2 \end{bmatrix} \begin{bmatrix} 0 \\ -1 \\ 0 \end{bmatrix} = \begin{bmatrix} 1 \\ 1 \\ 0 \end{bmatrix}
-$$
+= |-π/2+π/2-1   -1        0  |   |-1  -1    0  |
+  | 1         -π/2+π/2-1  0  | = | 1  -1    0  |
+  | 0            0       -π/2|   | 0   0  -π/2 |
 
-$$
-e^{[S_2](-\pi/2)} = \begin{bmatrix} 0 & 1 & 0 & 1 \\ -1 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
-$$
+G(-π/2)v = |-1  -1    0 || 0|   | 1|
+           | 1  -1    0 ||-1| = | 1|
+           | 0   0  -π/2|| 0|   | 0|
 
-Step 2: e^{\[S₁\](π/2)} — revolute about ẑ through origin by π/2.
-$$
-e^{[S_1](\pi/2)} = \begin{bmatrix} 0 & -1 & 0 & 0 \\ 1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
-$$
+e^{[S₂](-π/2)} = | 0   1  0  1 |
+                   |-1   0  0  1 |
+                   | 0   0  1  0 |
+                   | 0   0  0  1 |
+```
+
+Step 2: e^{[S₁](π/2)} — revolute about ẑ through origin by π/2.
+```
+e^{[S₁](π/2)} = | 0  -1  0  0 |
+                  | 1   0  0  0 |
+                  | 0   0  1  0 |
+                  | 0   0  0  1 |
+```
 
 Step 3: T = e^{[S₁]θ₁} · e^{[S₂]θ₂} · M
-$$
-\begin{aligned}
-\text{First: } e^{[S_2](-\pi/2)} \cdot M &= \begin{bmatrix} 0 & 1 & 0 & 1 \\ -1 & 0 & 0 & 1 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} 1 & 0 & 0 & 2 \\ 0 & 1 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} = \begin{bmatrix} 0 & 1 & 0 & 1 \\ -1 & 0 & 0 & -1 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} \\
-\text{Then: } T &= e^{[S_1](\pi/2)} \cdot \text{(above)} = \begin{bmatrix} 0 & -1 & 0 & 0 \\ 1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} 0 & 1 & 0 & 1 \\ -1 & 0 & 0 & -1 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} \\
-&= \begin{bmatrix} 1 & 0 & 0 & 1 \\ 0 & 1 & 0 & 1 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
-\end{aligned}
-$$
+```
+First: e^{[S₂](-π/2)} · M = | 0   1  0  1 || 1  0  0  2 |   | 0  1  0  1 |
+                              |-1   0  0  1 || 0  1  0  0 | = |-1  0  0 -1 |
+                              | 0   0  1  0 || 0  0  1  0 |   | 0  0  1  0 |
+                              | 0   0  0  1 || 0  0  0  1 |   | 0  0  0  1 |
+
+Then: T = e^{[S₁](π/2)} · (above) = | 0  -1  0  0 || 0  1  0  1 |
+                                       | 1   0  0  0 ||-1  0  0 -1 |
+                                       | 0   0  1  0 || 0  0  1  0 |
+                                       | 0   0  0  1 || 0  0  0  1 |
+
+    = | 1  0  0  1 |
+      | 0  1  0  1 |
+      | 0  0  1  0 |
+      | 0  0  0  1 |
+```
 
 **End-effector at [1, 1, 0], orientation = I.** The arm bends into an "L" shape.
 
@@ -262,9 +279,12 @@ $$
 **Hard**: (Exam-level, based on Practice Exam Problem 3)
 
 Given a 3-DOF robot with:
-$$
-M = \begin{bmatrix} 1 & 0 & 0 & 2L \\ 0 & 1 & 0 & -L \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix} \qquad \begin{aligned}S_1 &= [0,0,1,0,0,0]^T \\ S_2 &= [0,0,0,0,-1,0]^T \\ S_3 &= [0,0,1,-L,-L,0]^T\end{aligned}
-$$
+```
+M = | 1  0  0   2L |        S₁ = [0,0,1,0,0,0]^T
+    | 0  1  0   -L |        S₂ = [0,0,0,0,-1,0]^T
+    | 0  0  1    0 |        S₃ = [0,0,1,-L,-L,0]^T
+    | 0  0  0    1 |
+```
 
 Find T_sb for θ = [0, L, -π/2].
 
@@ -283,9 +303,12 @@ Step 2: Compute each matrix exponential.
 **e^{[S₁]·0} = I** (θ₁ = 0)
 
 **e^{[S₂]·L}** (prismatic, ω = 0):
-$$
-e^{[S_2]L} = \begin{bmatrix} 1 & 0 & 0 & 0 \\ 0 & 1 & 0 & -L \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
-$$
+```
+e^{[S₂]L} = | 1  0  0   0 |
+             | 0  1  0  -L |
+             | 0  0  1   0 |
+             | 0  0  0   1 |
+```
 
 **e^{[S₃]·(-π/2)}** (revolute about ẑ through [L, -L, 0]):
 
@@ -295,21 +318,30 @@ Rotation: Rot(ẑ, -π/2) = | 0  1  0 |
 
 Translation G(θ)v with v = [-L, -L, 0], θ = -π/2, sinθ = -1, cosθ = 0:
 
-$$
-\begin{aligned}
-G(-\pi/2) &= (-\pi/2)I + (1-0)[\omega] + (-\pi/2-(-1))[\omega]^2 \\
-&= (-\pi/2)I + \begin{bmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{bmatrix} + (1-\pi/2) \begin{bmatrix} -1 & 0 & 0 \\ 0 & -1 & 0 \\ 0 & 0 & 0 \end{bmatrix} \\
-&= \begin{bmatrix} -\pi/2-1+\pi/2 & -1 & 0 \\ 1 & -\pi/2-1+\pi/2 & 0 \\ 0 & 0 & -\pi/2 \end{bmatrix} = \begin{bmatrix} -1 & -1 & 0 \\ 1 & -1 & 0 \\ 0 & 0 & -\pi/2 \end{bmatrix} \\
-\\
-G(\theta)v &= \begin{bmatrix} -1 & -1 & 0 \\ 1 & -1 & 0 \\ 0 & 0 & -\pi/2 \end{bmatrix} \begin{bmatrix} -L \\ -L \\ 0 \end{bmatrix} = \begin{bmatrix} L+L \\ -L+L \\ 0 \end{bmatrix} = \begin{bmatrix} 2L \\ 0 \\ 0 \end{bmatrix}
-\end{aligned}
-$$
+```
+G(-π/2) = (-π/2)I + (1-0)[ω] + (-π/2-(-1))[ω]²
 
-$$
-e^{[S_3](-\pi/2)} = \begin{bmatrix} 0 & 1 & 0 & 2L \\ -1 & 0 & 0 & 0 \\ 0 & 0 & 1 & 0 \\ 0 & 0 & 0 & 1 \end{bmatrix}
-$$
+= (-π/2)I + |0 -1 0| + (1-π/2)|-1 0 0|
+              |1  0 0|           |0 -1 0|
+              |0  0 0|           |0  0 0|
 
-Step 3: Multiply T = I · e^{\[S₂\]L} · e^{\[S₃\](-π/2)} · M
+= |-π/2-1+π/2    -1        0 |   |-1   -1    0  |
+  |  1       -π/2-1+π/2    0 | = | 1   -1    0  |
+  |  0          0        -π/2|   | 0    0  -π/2 |
+
+G(θ)v = |-1  -1   0 ||-L|   | L+L |   | 2L|
+        | 1  -1   0 ||-L| = |-L+L | = |  0|
+        | 0   0  -π/2|| 0|   |  0  |   |  0|
+```
+
+```
+e^{[S₃](-π/2)} = | 0   1  0  2L |
+                   |-1   0  0   0 |
+                   | 0   0  1   0 |
+                   | 0   0  0   1 |
+```
+
+Step 3: Multiply T = I · e^{[S₂]L} · e^{[S₃](-π/2)} · M
 
 ```
 e^{[S₂]L} · e^{[S₃](-π/2)} = | 1  0  0   0 || 0   1  0  2L |   | 0   1  0   2L|
@@ -687,9 +719,9 @@ Find T.
 **Solution**:
 
 Since all other θ_i = 0, their exponentials are I:
-T = e^{\[S₂\](-π/2)} · e^{\[S₅\](π/2)} · M
+T = e^{[S₂](-π/2)} · e^{[S₅](π/2)} · M
 
-**e^{\[S₂\](-π/2)}**: ω = [0,1,0], v = [-H₁, 0, 0], θ = -π/2.
+**e^{[S₂](-π/2)}**: ω = [0,1,0], v = [-H₁, 0, 0], θ = -π/2.
 
 ```
 e^{[ω](-π/2)} = Rot(ŷ, -90°) = | 0  0  -1 |

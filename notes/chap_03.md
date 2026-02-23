@@ -542,10 +542,6 @@ Reading off the skew-symmetric entries:
        | -ω̂₂   ω̂₁     0  |
 ```
 
-```
-ω̂₃ = 1/√3,  ω̂₂ = −(−1/√3) = ... 
-```
-
 From [ω̂]: ω̂₁ = (1/√3)(1) = 1/√3, ω̂₂ = (1/√3)(−1) = −1/√3, ω̂₃ = (1/√3)(1) = 1/√3
 
 ```
@@ -698,7 +694,7 @@ Actually, re-reading: rotate 90° about ẑ_b, then translate 5 along ŷ_b. For 
 
 T_sb' = T_sb · Rot(ẑ, 90°) · Trans(0, 5, 0)
 
-But a single operator T = Trans(0,5,0) · Rot(ẑ, 90°) won't work because these are sequential body operations. Let me compute step by step:
+These are sequential body operations, so compute them step-by-step:
 
 Step 1: Rotate about ẑ_b by 90°:
 ```
@@ -763,31 +759,13 @@ A **twist** V ∈ ℝ⁶ packages angular and linear velocity:
 
 ω_b = ω_s = [0, 0, 2]^T (since R = I)
 
-v_b: velocity of {b} origin in {b} coordinates. Since the body rotates about ẑ_s passing through the origin of {s}, the {b} origin moves. But ω goes through {s} origin, not {b} origin:
-v_b = ω_b × (−p expressed in {b}) ... 
-
-Actually, let's use the definitions directly.
-
 ṗ = ω_s × p = [0,0,2] × [3,0,0] = [0, 6, 0]
 
-v_s = ṗ − ω_s × p = ṗ − ṗ ... that's wrong.
-
-Let me re-derive. v_s = ṗ + ω_s × (−p):
-v_s = [0, 6, 0] + [0, 0, 2] × [−3, 0, 0] = [0, 6, 0] + [0, −6, 0] ... hmm.
-
-More carefully: v_s is the velocity of a point on the body currently at {s} origin.
-The body rotates about ẑ_s through {s} origin, so that point has zero velocity.
-v_s = [0, 0, 0]^T.
-
-For V_s: ω_s = [0,0,2], v_s = ω_s × (−p_sb) + ṗ... 
-
-Let me just use: v_s = ṗ − [ω_s]p = [0,6,0] − [0,0,2]×[3,0,0] = [0,6,0] − [0,6,0] = [0,0,0].
-
-Wait, that gives v_s = 0, but that should be wrong for a rotation about the fixed-frame z-axis at the origin. Actually it's correct: the point on the body currently at {s} origin IS at the rotation axis, so its velocity IS zero.
+v_s = ṗ − ω_s × p = [0,6,0] − [0,6,0] = [0,0,0]
 
 V_s = [0, 0, 2, 0, 0, 0]^T
 
-v_b = R^T ṗ = I · [0, 6, 0] = [0, 6, 0]
+v_b = v_s − p × ω_b = [0,0,0] − ([3,0,0] × [0,0,2]) = [0, 6, 0]
 
 V_b = [0, 0, 2, 0, 6, 0]^T
 
@@ -834,85 +812,23 @@ R = I, p = [2, 1, 0]^T
 
 ω_b = ω_s = [0, 0, 1]^T (since R = I)
 
-The body rotates about ẑ through q = [2, 1, 0], so ṗ = ω × p = [0,0,1]×[2,1,0] = [−1, 2, 0].
+The body origin lies on the rotation axis (axis through [2,1,0]), so:
+ṗ = 0  and  v_b = 0
 
-v_s = ṗ + ω_s × (−p) = [−1, 2, 0] + [0,0,1] × [−2, −1, 0] = [−1, 2, 0] + [1, −2, 0] = [0, 0, 0]
+Thus:
+V_b = [0, 0, 1, 0, 0, 0]^T
 
-Hmm, that gives v_s = 0 again because the rotation axis passes through the {s} origin... wait, the axis passes through [2,1,0], not through origin.
-
-Let me redo: the screw axis is at q = [2,1,0] with ŝ = ẑ.
-
-v_s = −ŝ × q = −[0,0,1] × [2,1,0] = −[−1, 2, 0] = [1, −2, 0]
-
-Wait, for a screw with no pitch: v = −ω × q = ω × (−q):
-v_s = [0,0,1] × [−2, −1, 0] = [−(−1)·0 − 0·0, 0·(−2) − 1·0, 1·(−1) − 0·(−2)]... 
-
-Let me use the formula: for a zero-pitch screw at point q with axis ŝ:
-S = [ŝ; −ŝ × q] = [ŝ; q × ŝ]... 
-
-Using the formula v = −ω × q + hω (h=0): v = −ω × q
-
-v_s = −[0,0,1] × [2,1,0] = −[0·0 − 1·1, 1·2 − 0·0, 0·1 − 0·2] = −[−1, 2, 0] = [1, −2, 0]
-
-V_s = [0, 0, 1, 1, −2, 0]^T
-
-v_b = R^T(ṗ) = ṗ = ω × p = [0,0,1] × [2,1,0] = [−1, 2, 0]
-
-V_b = [0, 0, 1, −1, 2, 0]^T
-
-Verify: V_s = [Ad_T] V_b:
-```
-[Ad_T] = | I   0 |   [p] = | 0   0  -1|
-         |[p]  I |          | 0   0   2|... 
-```
-
-Actually [p] for p = [2,1,0]:
-```
-[p] = | 0   0   1 |
-      | 0   0  -2 |
-      |-1   2   0 |
-```
-
-Wait:
+Now convert to the space frame:
 ```
 [p] = |  0   -p₃   p₂ |   |  0    0    1 |
       |  p₃   0   -p₁ | = |  0    0   -2 |
       | -p₂  p₁    0  |   | -1    2    0 |
 ```
 
-V_s = | I   0 | |  0 |   |          0         |
-      |[p]  I | |  0 | = |          0         |
-                |  1 |   |          1         |
-                | -1 |   | [p]ω_b + v_b       |
-                |  2 |
-                |  0 |
+v_s = [p]ω_b + Rv_b = [p][0,0,1]^T + 0 = [1, -2, 0]
 
-[p]ω_b = | 0  0  1 || 0 |   | 1 |
-         | 0  0 -2 || 0 | = |-2 |
-         |-1  2  0 || 1 |   | 0 |
-
-v_s = [p]ω_b + v_b = [1,-2,0] + [-1,2,0] = [0, 0, 0]
-
-That gives V_s = [0,0,1,0,0,0]... which seems wrong because the axis doesn't pass through origin.
-
-I think I made an error above. Let me reconsider. The point on the body currently at the {s} origin: since R = I and p = [2,1,0], the body point at {s} origin corresponds to body coordinates [−2, −1, 0]. Its velocity = ω × q_axis_from_point... 
-
-Actually, the issue is simpler. A rotation about ẑ through point q = [2,1,0]: the velocity of a point at the {s} origin (which is at distance √5 from the axis) should NOT be zero.
-
-Let me reconsider. The formula v_s = ṗ + ω_s × (−p) from the textbook eq. 3.73:
-ṗ is the velocity of the {b} origin.
-
-If the body rotates about an axis through q = [2,1,0] in ẑ direction, the velocity of point p = [2,1,0] (which is on the axis) is zero. But the {b} origin IS at p = [2,1,0]. So ṗ = 0.
-
-v_s = 0 + [0,0,1] × [−2,−1,0] = [−(−1), −(−2)·... ]
-
-ω × (−p) = [0,0,1] × [−2,−1,0] = [(0)(0)−(1)(−1), (1)(−2)−(0)(0), (0)(−1)−(0)(−2)] = [1, −2, 0]
-
-So V_s = [0, 0, 1, 1, −2, 0]^T.  And V_b = [0, 0, 1, 0, 0, 0]^T (since the rotation axis passes through {b} origin, v_b = 0).
-
-Let me re-verify the adjoint:
-[p]ω_b = [p][0,0,1]^T = [1, −2, 0]^T (from above)
-v_s = [p]ω_b + v_b = [1,−2,0] + [0,0,0] = [1,−2,0]  ✓
+So:
+V_s = [0, 0, 1, 1, −2, 0]^T
 
 So **V_s = [0, 0, 1, 1, −2, 0]^T** and **V_b = [0, 0, 1, 0, 0, 0]^T**.
 
@@ -1055,19 +971,6 @@ R_bc = upper-left 3×3, p_bc = [-1, -2, 0]^T
              |  2   -1    0 || 0   0  1 |   | 1  2   0 |
 ```
 
-Wait, let me redo this carefully:
-```
-[p_bc] for p = [-1, -2, 0]:
-[p] = |  0    -0   -2 |   | 0    0   -2 |
-      |  0     0    1 | = | 0    0    1 |
-      |  2    -1    0 |   | 2   -1    0 |
-
-Hmm, p = [p₁, p₂, p₃] = [-1, -2, 0]:
-[p] = |  0   -p₃   p₂  |   | 0    0   -2 |
-      |  p₃   0   -p₁  | = | 0    0    1 |
-      | -p₂   p₁   0   |   | 2   -1    0 |
-```
-
 ```
 [p]R = | 0    0   -2 || 0   1  0 |   | 0    0   -2 |
        | 0    0    1 ||-1   0  0 | = | 0    0    1 |
@@ -1095,14 +998,6 @@ V_b = |  0   1  0   0   0   0 || 0 |   | 0  |
       |  0   0 -2   0   1   0 || 3 |   |-2  |
       |  0   0  1  -1   0   0 || 0 |   | 1-3|
       |  1   2  0   0   0   1 || 0 |   | 0  |
-
-Wait let me compute each row:
-Row 1: 0·0 + 1·0 + 0·1 + 0·3 + 0·0 + 0·0 = 0
-Row 2: -1·0 + 0·0 + 0·1 + 0·3 + 0·0 + 0·0 = 0
-Row 3: 0·0 + 0·0 + 1·1 + 0·3 + 0·0 + 0·0 = 1
-Row 4: 0·0 + 0·0 + (-2)·1 + 0·3 + 1·0 + 0·0 = -2
-Row 5: 0·0 + 0·0 + 1·1 + (-1)·3 + 0·0 + 0·0 = 1-3 = -2
-Row 6: 1·0 + 2·0 + 0·1 + 0·3 + 0·0 + 1·0 = 0
 ```
 
 **V_b = [0, 0, 1, −2, −2, 0]^T**
@@ -1190,12 +1085,6 @@ e^{[ω](-π/2)} = I + (-1)[ω̂] + (1)[ω̂]² = | 0   1  0 |
 For the translation part, G(θ)v with v = [-L, -L, 0]^T, θ = -π/2:
 ```
 G(θ) = Iθ + (1−cosθ)[ω] + (θ−sinθ)[ω]²
-
-= I(-π/2) + (1−0)[ω] + (−π/2−(−1))[ω]²
-
-= (-π/2)I + [ω] + (1−π/2)[ω]²
-
-Hmm, let me be more careful:
 θ = -π/2, sinθ = -1, cosθ = 0
 
 G(θ) = (-π/2)I + (1-0)| 0 -1 0| + (-π/2-(-1))|-1 0 0|
@@ -1206,39 +1095,9 @@ G(θ) = (-π/2)I + (1-0)| 0 -1 0| + (-π/2-(-1))|-1 0 0|
              | 1  0 0|           | 0 -1 0|
              | 0  0 0|           | 0  0 0|
 
-= |π/2-1+π/2   -1       0  |... 
-```
-
-This is getting complex. Let me use the full matrix exponential formula directly.
-
-For S₃ = [0, 0, 1, −L, −L, 0]^T:
-
-```
-[S₃] = | [ω]  v |   | 0  -1  0  -L |
-       |  0   0 | = | 1   0  0  -L |
-                    | 0   0  0   0 |
-                    | 0   0  0   0 |
-```
-
-e^{[S₃]θ₃} with θ₃ = −π/2:
-
-The rotation part is e^{[ω](-π/2)} = | 0  1  0 |
-                                       |-1  0  0 |
-                                       | 0  0  1 |
-
-The translation part G(θ)v:
-```
-G(θ) = Iθ + (1−cosθ)[ω] + (θ − sinθ)[ω]²
-
-θ = -π/2, sin(-π/2) = -1, cos(-π/2) = 0
-
-G = (-π/2)I + (1)| 0 -1 0| + (-π/2+1)|-1  0  0|
-                  | 1  0 0|            | 0 -1  0|
-                  | 0  0 0|            | 0  0  0|
-
-= |-π/2+π/2-1    -1         0  |   |-1   -1    0 |
-  | 1          -π/2+π/2-1   0  | = | 1   -1    0 |
-  | 0             0       -π/2 |   | 0    0  -π/2|
+= |-1  -1    0 |
+  | 1  -1    0 |
+  | 0   0  -π/2|
 ```
 
 G(θ)v = |-1  -1    0 ||-L|   | L+L  |   | 2L  |

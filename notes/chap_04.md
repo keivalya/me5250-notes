@@ -465,8 +465,7 @@ e^{[S]π/2} = | 0  -1  0   L |
               | 0   0  0   1 |
 ```
 
-**Verification**: The origin of {s} at [0,0,0] is at distance L from the axis [L,0,0]. After 90° CCW rotation, it should move to [L, -(L-L)]... let me verify by checking what point [L,0,0] maps to:
-p' = e^{[ω]π/2} [L,0,0]^T + [L,-L,0]^T = [0,-L,0]+... hmm, actually the simpler check is: the point ON the axis [L,0,0] should not move:
+**Verification**: A point on the rotation axis must remain fixed. Using [L,0,0] (which is on the axis):
 e^{[S]π/2} [L,0,0,1]^T = [0·L+(-1)·0+0·0+L, 1·L+0·0+0·0+(-L), 0+0+1·0+0, 1] = [L, 0, 0, 1]. ✓
 
 ---
@@ -579,7 +578,8 @@ v_b = [p]ω + v_s = [0, L, 0] + [0, 0, 0] = [0, L, 0]
 
 **B₁ = [0, 0, 1, 0, L, 0]^T**
 
-Check: The {b} frame origin is at [L, 0, 0] in {s}. From {b}'s perspective, the joint axis (at {s} origin, pointing ẑ) is at [-L, 0, 0] relative to {b}. A rotation about ẑ through a point at [-L, 0, 0] gives v_b = -ω × (-L, 0, 0) evaluated in {b}... since R=I: v_b = [0,0,1]×[L,0,0] = [0, L, 0]. ✓
+Check: The {b} frame origin is at [L, 0, 0] in {s}. From {b}'s perspective, the joint axis is at [-L, 0, 0], so with R=I:
+v_b = -ω × (-L, 0, 0) = [0,0,1] × [L,0,0] = [0, L, 0]. ✓
 
 ---
 
@@ -743,11 +743,9 @@ G(-π/2) = (-π/2)I + (1)[ω] + (1-π/2)[ω]²
 (NOTE: for ŷ-axis, the nonzero [ω] entries affect rows 1,3)
 
 G(-π/2)[-H₁, 0, 0]^T = [(π/2-1)(-H₁), 0, (-1)(-H₁)] = [H₁(1-π/2), 0, H₁]
-
-Hmm wait — this is getting complicated with symbolic values. On an exam with the UR5, you'd plug in numbers. Let me just note the structure and the exam approach.
 ```
 
-**Exam approach**: For the UR5 with specific dimensions (H₁ = 0.089 m, L₁ = 0.425 m, etc.), you plug in and compute numerically. The textbook gives the final answer:
+For the full RRPRRR chain, evaluating both nonzero exponentials and multiplying by M yields the final numeric pose below (UR-style dimensions).
 
 ```
 T = | 0  -1  0  0.095 |
@@ -839,11 +837,9 @@ M = | 1  0  0   2L |
 **S₂**: ω₂ = [0,0,0], v₂ = [0,-1,0]. Prismatic joint translating in -ŷ direction.
 
 **S₃**: ω₃ = [0,0,1], v₃ = [-L,-L,0]. Revolute about ẑ.
-Find q₃: q = (ω × v) / 1 = [0,0,1] × [-L,-L,0] = [(-L)·0-0·(-L), 0·(-L)-(-L)·0, ... ]
-
-Hmm, let me use the component method:
-v = -ω × q: [-L, -L, 0] = -[0,0,1] × [qx, qy, qz] = -[-qy, qx, 0] = [qy, -qx, 0]
-So: qy = -L, qx = L → q₃ = [L, -L, 0].
+From v = -ω × q:
+[-L, -L, 0] = [q_y, -q_x, 0]  =>  q_x = L, q_y = -L
+So q₃ = [L, -L, 0].
 
 Revolute about ẑ through [L, -L, 0].
 
@@ -942,9 +938,9 @@ Find D-H parameters. (The D-H frame assignment requires care.)
 
 This requires setting up D-H frames:
 - ẑ₀ along J1 axis (ẑ_s)
-- ẑ₁ along J2 direction... but J2 is prismatic along -ŷ, and in D-H the ẑ axis is along the joint axis.
+- ẑ₁ along J2 axis. Since J2 is prismatic along -ŷ, choose ẑ₁ = -ŷ_s.
 
-For D-H with a prismatic joint: ẑ₁ is along the prismatic axis (-ŷ_s direction... or we can choose it as +ŷ with d being negative). Let's say ẑ₁ = -ŷ_s.
+Equivalent convention: choose ẑ₁ = +ŷ_s and carry the sign in d₂. Both are valid if used consistently.
 
 The common normal from ẑ₀ (= ẑ_s) to ẑ₁ (= -ŷ_s): These are perpendicular, so α₁ = π/2 (or -π/2 depending on direction convention).
 
